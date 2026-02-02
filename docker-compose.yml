@@ -19,7 +19,7 @@ services:
       - "15672:15672"
 
   api:
-    build: ./services/api
+    build: ./api
     container_name: gdash_api
     ports:
       - "3000:3000"
@@ -33,7 +33,7 @@ services:
     command: npm run start:dev
 
   frontend:
-    build: ./services/frontend
+    build: ./frontend
     container_name: gdash_frontend
     ports:
       - "5173:5173"

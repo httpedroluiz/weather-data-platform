@@ -1,0 +1,1 @@
+print("Weather collector running")
