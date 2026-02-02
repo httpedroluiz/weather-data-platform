@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: gdash_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: gdash_rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  api:
+    build: ./services/api
+    container_name: gdash_api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - rabbitmq
+    volumes:
+      - ./api:/app
+    command: npm run start:dev
+
+  frontend:
+    build: ./services/frontend
+    container_name: gdash_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    command: npm run dev
+
+  weather-collector:
+    build: ./services/weather-collector
+    container_name: gdash-weather-collector
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+
+  queue-worker:
+    build: ./services/queue-worker
+    container_name: gdash-queue-worker
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - api
+
+volumes:
+  mongo_data:
