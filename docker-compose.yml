@@ -48,6 +48,7 @@ services:
       - .env
     depends_on:
       - rabbitmq
+    restart: unless-stopped
 
   queue-worker:
     build: ./services/queue-worker
