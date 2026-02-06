@@ -6,8 +6,8 @@ export class SeedService implements OnModuleInit {
   constructor(private readonly usersService: UsersService) {}
 
   async onModuleInit() {
-    const email = process.env.ADMIN_EMAIL || 'admin@example.com';
-    const password = process.env.ADMIN_PASSWORD || '123456';
+    const email = process.env.ADMIN_EMAIL as string;
+    const password = process.env.ADMIN_PASSWORD as string;
 
     const existingUser = await this.usersService.findByEmail(email);
 

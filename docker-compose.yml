@@ -55,6 +55,8 @@ services:
     container_name: gdash-queue-worker
     env_file:
       - .env
+    volumes:
+      - ./services/queue-worker:/app
     depends_on:
       - rabbitmq
       - api

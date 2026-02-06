@@ -1,7 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"log"
+)
 
 func main() {
-	fmt.Println("Queue worker running")
+	conn, ch := connectRabbit()
+	defer conn.Close()
+	defer ch.Close()
+
+	msgs, err := ch.Consume(
+		getEnv("RABBITMQ_QUEUE"),
+		"",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Worker waiting for messages...")
+
+	for msg := range msgs {
+		var payload WeatherMessage
+
+		err := json.Unmarshal(msg.Body, &payload)
+		if err != nil {
+			log.Println("Invalid message:", err)
+			msg.Nack(false, false)
+			continue
+		}
+
+		err = sendToAPI(payload)
+		if err != nil {
+			log.Println("API error:", err)
+			msg.Nack(false, true)
+			continue
+		}
+
+		msg.Ack(false)
+		log.Println("Message processed")
+	}
 }
