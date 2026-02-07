@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"fmt"
 )
 
 func sendToAPI(payload WeatherMessage) error {
@@ -26,8 +27,9 @@ func sendToAPI(payload WeatherMessage) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 300 {
-		return err
+		return fmt.Errorf("API returned status %d", resp.StatusCode)
 	}
+
 
 	return nil
 }

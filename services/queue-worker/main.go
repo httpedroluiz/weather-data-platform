@@ -3,9 +3,26 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"time"
+	"net/http"
 )
 
+func waitForAPI() {
+	for {
+		resp, err := http.Get(getEnv("API_BASE_URL") + "/health")
+		if err == nil && resp.StatusCode == 200 {
+			log.Println("API is ready")
+			return
+		}
+
+		log.Println("Waiting for API...")
+		time.Sleep(5 * time.Second)
+	}
+}
+
 func main() {
+	waitForAPI()
+	
 	conn, ch := connectRabbit()
 	defer conn.Close()
 	defer ch.Close()
