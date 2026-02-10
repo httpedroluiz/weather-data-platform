@@ -17,4 +17,8 @@ export class WeatherService {
   findAll() {
     return this.weatherModel.find().sort({ createdAt: -1 }).limit(100);
   }
+
+  findForExport() {
+    return this.weatherModel.find().sort({ createdAt: 1 });
+  }
 }

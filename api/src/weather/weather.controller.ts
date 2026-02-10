@@ -1,5 +1,8 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Res } from '@nestjs/common';
 import { WeatherService } from './weather.service';
+import { Parser } from 'json2csv';
+import * as ExcelJS from 'exceljs';
+import type { Response } from 'express';
 
 @Controller('weather')
 export class WeatherController {
@@ -20,5 +23,59 @@ export class WeatherController {
   @Get('logs')
   findAll() {
     return this.weatherService.findAll();
+  }
+
+  @Get('export.csv')
+  async exportCsv(@Res() res: Response) {
+    const data = await this.weatherService.findForExport();
+
+    const parser = new Parser({
+      fields: [
+        'temperature',
+        'windspeed',
+        'weatherCode',
+        'time',
+        'latitude',
+        'longitude',
+        'createdAt',
+      ],
+    });
+
+    const csv = parser.parse(data);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('weather.csv');
+    res.send(csv);
+  }
+
+  @Get('export.xlsx')
+  async exportXlsx(@Res() res: Response) {
+    const data = await this.weatherService.findForExport();
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Weather');
+
+    sheet.columns = [
+      { header: 'Temperature', key: 'temperature' },
+      { header: 'Windspeed', key: 'windspeed' },
+      { header: 'Weather Code', key: 'weatherCode' },
+      { header: 'Time', key: 'time' },
+      { header: 'Latitude', key: 'latitude' },
+      { header: 'Longitude', key: 'longitude' },
+      { header: 'Created At', key: 'createdAt' },
+    ];
+
+    data.forEach((item) => {
+      sheet.addRow(item.toObject());
+    });
+
+    res.header(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.attachment('weather.xlsx');
+
+    await workbook.xlsx.write(res);
+    res.end();
   }
 }
