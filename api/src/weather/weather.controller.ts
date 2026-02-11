@@ -3,10 +3,14 @@ import { WeatherService } from './weather.service';
 import { Parser } from 'json2csv';
 import * as ExcelJS from 'exceljs';
 import type { Response } from 'express';
+import { WeatherInsightsService } from './insights/weather-insights.service';
 
 @Controller('weather')
 export class WeatherController {
-  constructor(private weatherService: WeatherService) {}
+  constructor(
+    private weatherService: WeatherService,
+    private insightsService: WeatherInsightsService,
+  ) {}
 
   @Post('logs')
   create(@Body() body: any) {
@@ -23,6 +27,12 @@ export class WeatherController {
   @Get('logs')
   findAll() {
     return this.weatherService.findAll();
+  }
+
+  @Get('insights')
+  async insights() {
+    const logs = await this.weatherService.findForExport();
+    return this.insightsService.generate(logs);
   }
 
   @Get('export.csv')
