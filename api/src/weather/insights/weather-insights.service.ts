@@ -5,7 +5,13 @@ import { WeatherLog } from '../weather.schema';
 export class WeatherInsightsService {
   generate(logs: WeatherLog[]) {
     if (!logs.length) {
-      return { message: 'No data available' };
+      return {
+        averageTemperature: 0,
+        trend: 'estável',
+        classification: 'indefinido',
+        alerts: [],
+        summary: 'Sem dados suficientes.',
+      };
     }
 
     const temps = logs.map((l) => l.temperature);

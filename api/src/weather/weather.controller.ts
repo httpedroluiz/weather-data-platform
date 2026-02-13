@@ -24,6 +24,17 @@ export class WeatherController {
     });
   }
 
+  @Get()
+  async findLatest() {
+    const data = await this.weatherService.findLatest();
+
+    if (!data) {
+      return { message: 'No weather data found' };
+    }
+
+    return data;
+  }
+
   @Get('logs')
   findAll() {
     return this.weatherService.findAll();

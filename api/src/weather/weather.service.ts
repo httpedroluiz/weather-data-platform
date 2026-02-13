@@ -10,12 +10,16 @@ export class WeatherService {
     private weatherModel: Model<WeatherLog>,
   ) {}
 
-  create(data: Partial<WeatherLog>) {
+  async create(data: Partial<WeatherLog>) {
     return this.weatherModel.create(data);
   }
 
-  findAll() {
+  async findAll() {
     return this.weatherModel.find().sort({ createdAt: -1 }).limit(100);
+  }
+
+  async findLatest() {
+    return this.weatherModel.findOne().sort({ createdAt: -1 });
   }
 
   findForExport() {
