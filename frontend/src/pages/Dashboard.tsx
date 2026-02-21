@@ -13,6 +13,7 @@ export function Dashboard() {
   const [weather, setWeather] = useState<any>(null);
   const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const isEmpty = !weather && !insights;
 
   useEffect(() => {
     async function load() {
@@ -29,32 +30,22 @@ export function Dashboard() {
 
     load();
   }, []);
+  
 
   if (loading) {
     return <DashboardSkeleton />;
   }
 
-  if (!weather) {
-    return (
-      <div className="p-10">
-        <EmptyState
-          title="Clima Atual"
-          message="Nenhum dado climático disponível no momento."
-        />
-      </div>
-    );
-  }
-
-  if (!insights) {
-    return (
-      <div className="p-10">
-        <EmptyState
-          title="Insights"
-          message="Nenhum insight disponível no momento."
-        />
-      </div>
-    );
-  }
+  if (isEmpty) {
+  return (
+    <div className="p-10 max-w-6xl mx-auto">
+      <EmptyState
+        title="Sem dados climáticos"
+        message="Ainda não há registros de clima para exibir. Aguarde a próxima coleta."
+      />
+    </div>
+  );
+}
 
   return (
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
