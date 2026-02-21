@@ -3,6 +3,7 @@ import { getWeather, getInsights } from "../api/weather";
 import { InfoCard } from "../components/InfoCard";
 import { Badge } from "@/components/ui/badge";
 import { DashboardSkeleton } from "./DashboardSkeleton";
+import { EmptyState } from "../components/EmptyState";
 import {
   formatDate,
   weatherCodeToText,
@@ -33,13 +34,35 @@ export function Dashboard() {
     return <DashboardSkeleton />;
   }
 
+  if (!weather) {
+    return (
+      <div className="p-10">
+        <EmptyState
+          title="Clima Atual"
+          message="Nenhum dado climático disponível no momento."
+        />
+      </div>
+    );
+  }
+
+  if (!insights) {
+    return (
+      <div className="p-10">
+        <EmptyState
+          title="Insights"
+          message="Nenhum insight disponível no momento."
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="p-10 space-y-8">
-      <h1 className="text-4xl font-bold tracking-tight">
+    <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
         Weather Dashboard
       </h1>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <InfoCard title="Clima Atual">
           <div className="space-y-2 text-sm">
             <p>
