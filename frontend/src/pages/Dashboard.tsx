@@ -4,14 +4,16 @@ import { InfoCard } from "../components/InfoCard";
 import { Badge } from "@/components/ui/badge";
 import { DashboardSkeleton } from "./DashboardSkeleton";
 import { EmptyState } from "../components/EmptyState";
+import type { Weather } from "@/types/weather";
+import type { WeatherInsights } from "@/types/insights";
 import {
   formatDate,
   weatherCodeToText,
 } from "@/utils/weather";
 
 export function Dashboard() {
-  const [weather, setWeather] = useState<any>(null);
-  const [insights, setInsights] = useState<any>(null);
+  const [weather, setWeather] = useState<Weather | null>(null);
+  const [insights, setInsights] = useState<WeatherInsights | null>(null);
   const [loading, setLoading] = useState(true);
   const isEmpty = !weather && !insights;
 
@@ -45,7 +47,7 @@ export function Dashboard() {
       />
     </div>
   );
-}
+  }
 
   return (
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
@@ -55,43 +57,59 @@ export function Dashboard() {
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <InfoCard title="Clima Atual">
-          <div className="space-y-2 text-sm">
-            <p>
-              Temperatura: <strong>{weather.temperature}°C</strong>
-            </p>
+          {weather ? (
+            <div className="space-y-2 text-sm">
+              <p>
+                Temperatura: <strong>{weather.temperature}°C</strong>
+              </p>
 
-            <p>
-              Vento: {weather.windspeed} km/h
-            </p>
+              <p>
+                Vento: {weather.windspeed} km/h
+              </p>
 
-            <p>
-              Condição:{" "}
-              <Badge variant="secondary">
-                {weatherCodeToText(weather.weatherCode)}
-              </Badge>
-            </p>
+              <p>
+                Condição:{" "}
+                <Badge variant="secondary">
+                  {weatherCodeToText(weather.weatherCode)}
+                </Badge>
+              </p>
 
-            <p>Latitude: {weather.latitude}</p>
-            <p>Longitude: {weather.longitude}</p>
+              <p>Latitude: {weather.latitude}</p>
+              <p>Longitude: {weather.longitude}</p>
 
-            <p className="text-muted-foreground">
-              Registrado em {formatDate(weather.createdAt)}
+              <p className="text-muted-foreground">
+                Registrado em {formatDate(weather.createdAt)}
+              </p>
+            </div> ) : (
+            <p className="text-sm text-muted-foreground">
+              Nenhum dado climático disponível.
             </p>
-          </div>
+          )}
         </InfoCard>
 
         <InfoCard title="Insights">
-          <p>
-            <strong>Tendência:</strong>{" "}
-            <Badge variant="outline">
-              {insights.trend}
-            </Badge>
-          </p>
+          {insights ? (
+            <div className="space-y-2 text-sm">
+              <p>
+                <strong>Tendência:</strong>{" "}
+                <Badge variant="outline">
+                  {insights.trend}
+                </Badge>
+              </p>
 
-          <p>
-            <strong>Classificação:</strong>{" "}
-            <Badge>{insights.classification}</Badge>
-          </p>
+              <p>
+                <strong>Classificação:</strong>{" "}
+                <Badge>{insights.classification}</Badge>
+              </p>
+
+              <p className="text-sm text-zinc-400">
+                {insights.summary}
+              </p>
+            </div> ) : (
+            <p className="text-sm text-muted-foreground">
+              Nenhum insight disponível.
+            </p>
+          )}
         </InfoCard>
       </div>
     </div>
