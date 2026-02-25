@@ -12,6 +12,10 @@ import {
   formatDate,
   weatherCodeToText,
 } from "@/utils/weather";
+import {
+  trendVariant,
+  classificationVariant,
+} from "@/utils/badgeVariants";
 
 export function Dashboard() {
   const [weather, setWeather] = useState<Weather | null>(null);
@@ -141,14 +145,16 @@ export function Dashboard() {
             <div className="space-y-2 text-sm">
               <p>
                 <strong>Tendência:</strong>{" "}
-                <Badge variant="outline">
+                <Badge variant={trendVariant(insights.trend)}>
                   {insights.trend}
                 </Badge>
               </p>
 
               <p>
                 <strong>Classificação:</strong>{" "}
-                <Badge>{insights.classification}</Badge>
+                <Badge variant={classificationVariant(insights.classification)}>
+                  {insights.classification}
+                </Badge>
               </p>
 
               <p className="text-sm text-zinc-400">
