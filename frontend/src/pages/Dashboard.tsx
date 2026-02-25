@@ -16,24 +16,36 @@ import {
 export function Dashboard() {
   const [weather, setWeather] = useState<Weather | null>(null);
   const [insights, setInsights] = useState<WeatherInsights | null>(null);
+  const [weatherError, setWeatherError] = useState(false);
+  const [insightsError, setInsightsError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const isEmpty = !weather && !insights;
+  const isEmpty =
+  !weather &&
+  !insights &&
+  !weatherError &&
+  !insightsError;
 
   useEffect(() => {
     async function load() {
       try {
         const weatherData = await getWeather();
-        const insightsData = await getInsights();
-
         setWeather(weatherData);
+      } catch {
+        setWeatherError(true);
+      }
+
+      try {
+        const insightsData = await getInsights();
         setInsights(insightsData);
+      } catch {
+        setInsightsError(true);
       } finally {
         setLoading(false);
       }
     }
 
-    load();
-  }, []);
+  load();
+}, []);
   
 
   if (loading) {
@@ -112,7 +124,12 @@ export function Dashboard() {
               <p className="text-muted-foreground">
                 Registrado em {formatDate(weather.createdAt)}
               </p>
-            </div> ) : (
+            </div> 
+          ) : weatherError ? (
+            <p className="text-sm text-destructive">
+              Erro ao carregar dados climáticos.
+            </p> 
+          ) : (
             <p className="text-sm text-muted-foreground">
               Nenhum dado climático disponível.
             </p>
@@ -137,7 +154,12 @@ export function Dashboard() {
               <p className="text-sm text-zinc-400">
                 {insights.summary}
               </p>
-            </div> ) : (
+            </div> 
+          ) : insightsError ? (
+            <p className="text-sm text-destructive">
+              Erro ao carregar insights.
+            </p>
+          )  : (
             <p className="text-sm text-muted-foreground">
               Nenhum insight disponível.
             </p>
