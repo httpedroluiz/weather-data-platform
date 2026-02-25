@@ -6,6 +6,8 @@ import { DashboardSkeleton } from "./DashboardSkeleton";
 import { EmptyState } from "../components/EmptyState";
 import type { Weather } from "@/types/weather";
 import type { WeatherInsights } from "@/types/insights";
+import { Button } from "@/components/ui/button";
+import { downloadFile } from "@/utils/download";
 import {
   formatDate,
   weatherCodeToText,
@@ -51,9 +53,39 @@ export function Dashboard() {
 
   return (
     <div className="p-6 md:p-10 space-y-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-        Weather Dashboard
-      </h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+          Weather Dashboard
+        </h1>
+
+        <div className="flex flex-wrap gap-3">
+          <Button
+            variant="outline"
+            className="text-foreground hover:bg-muted/80 transition-colors"
+            onClick={() =>
+              downloadFile(
+                `${import.meta.env.VITE_API_URL}/weather/export.csv`,
+                "weather-data.csv"
+              )
+            }
+          >
+            Exportar CSV
+          </Button>
+
+          <Button
+            variant="outline"
+            className="text-foreground hover:bg-muted/80 transition-colors"
+            onClick={() =>
+              downloadFile(
+                `${import.meta.env.VITE_API_URL}/weather/export.xlsx`,
+                "weather-data.xlsx"
+              )
+            }
+          >
+            Exportar XLSX
+          </Button>
+        </div>
+      </div>
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <InfoCard title="Clima Atual">
