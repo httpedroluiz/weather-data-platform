@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "@/api/auth";
-import { setToken } from "@/utils/auth";
+import { registerUser } from "@/api/users";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +13,13 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export function Login() {
+export function Register() {
   const navigate = useNavigate();
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,11 +29,10 @@ export function Login() {
     setLoading(true);
 
     try {
-      const data = await login(email, password);
-      setToken(data.access_token);
-      navigate("/");
+      await registerUser(name, email, password);
+      navigate("/login");
     } catch {
-      setError("Email ou senha inválidos.");
+      setError("Erro ao cadastrar usuário.");
     } finally {
       setLoading(false);
     }
@@ -41,7 +42,7 @@ export function Login() {
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle>Criar conta</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -51,6 +52,15 @@ export function Login() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+
+            <div className="space-y-1">
+              <Label>Nome</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
 
             <div className="space-y-1">
               <Label>Email</Label>
@@ -73,17 +83,17 @@ export function Login() {
             </div>
 
             <Button className="w-full" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Criando..." : "Criar conta"}
             </Button>
           </form>
 
           <div className="mt-4 text-sm text-center">
-            Não tem conta?{" "}
+            Já tem conta?{" "}
             <button
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               className="underline"
             >
-              Criar conta
+              Entrar
             </button>
           </div>
         </CardContent>
