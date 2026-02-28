@@ -75,7 +75,7 @@ export function Dashboard() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-            Weather Dashboard
+            Dashboard
           </h1>
 
           <div className="flex flex-wrap gap-3">
