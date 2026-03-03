@@ -17,10 +17,15 @@ export class WeatherController {
     return this.weatherService.create({
       temperature: body.temperature,
       windspeed: body.windspeed,
-      weatherCode: body.weathercode,
+      weatherCode: body.weatherCode,
+      humidity: body.humidity,
+      cloudCover: body.cloudCover,
+      temperatureMax: body.temperatureMax,
+      temperatureMin: body.temperatureMin,
+      city: body.city,
       time: body.time,
       latitude: body.latitude,
-      longitude: body.longitude,
+      longitude: body.longitude
     });
   }
 
@@ -53,8 +58,13 @@ export class WeatherController {
     const parser = new Parser({
       fields: [
         'temperature',
+        'temperatureMin',
+        'temperatureMax',
+        'humidity',
+        'cloudCover',
         'windspeed',
         'weatherCode',
+        'city',
         'time',
         'latitude',
         'longitude',
@@ -78,8 +88,13 @@ export class WeatherController {
 
     sheet.columns = [
       { header: 'Temperature', key: 'temperature' },
+      { header: 'Temp Min', key: 'temperatureMin' },
+      { header: 'Temp Max', key: 'temperatureMax' },
+      { header: 'Humidity', key: 'humidity' },
+      { header: 'Cloud Cover', key: 'cloudCover' },
       { header: 'Windspeed', key: 'windspeed' },
       { header: 'Weather Code', key: 'weatherCode' },
+      { header: 'City', key: 'city' },
       { header: 'Time', key: 'time' },
       { header: 'Latitude', key: 'latitude' },
       { header: 'Longitude', key: 'longitude' },

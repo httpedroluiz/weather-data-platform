@@ -8,7 +8,7 @@ import type { Weather } from "@/types/weather";
 import type { WeatherInsights } from "@/types/insights";
 import { Button } from "@/components/ui/button";
 import { downloadFile } from "@/utils/download";
-import { Navbar } from "@/components/navbar"
+import { Navbar } from "@/components/Navbar"
 import {
   formatDate,
   weatherCodeToText,
@@ -125,6 +125,12 @@ export function Dashboard() {
                     {weatherCodeToText(weather.weatherCode)}
                   </Badge>
                 </p>
+
+                <p>Cidade: {weather.city}</p>
+                <p>Umidade: {weather.humidity}%</p>
+                <p>Nuvens: {weather.cloudCover}%</p>
+                <p>Máx: {weather.temperatureMax}°C</p>
+                <p>Mín: {weather.temperatureMin}°C</p>
 
                 <p>Latitude: {weather.latitude}</p>
                 <p>Longitude: {weather.longitude}</p>
