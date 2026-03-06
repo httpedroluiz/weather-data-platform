@@ -3,7 +3,7 @@ package main
 type WeatherMessage struct {
 	Temperature float64 `json:"temperature"`
     Windspeed float64 `json:"windspeed"`
-    WeatherCode int `json:"weathercode"`
+    WeatherCode int `json:"weatherCode"`
 
     Humidity int `json:"humidity"`
     CloudCover int `json:"cloudCover"`
