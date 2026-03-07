@@ -49,7 +49,7 @@ def fetch_weather():
         "temperatureMax": daily["temperature_2m_max"][0],
         "temperatureMin": daily["temperature_2m_min"][0],
 
-        "city": os.getenv("WEATHER_CITY"),
+        "city": os.getenv("WEATHER_CITY") or "Curitiba",
 
         "time": current.get("time"),
         "latitude": params["latitude"],

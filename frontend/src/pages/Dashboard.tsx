@@ -126,7 +126,7 @@ export function Dashboard() {
                   </Badge>
                 </p>
 
-                <p>Cidade: {weather.city}</p>
+                <p>Cidade: {weather.city || "Curitiba"}</p>
                 <p>Umidade: {weather.humidity}%</p>
                 <p>Nuvens: {weather.cloudCover}%</p>
                 <p>Máx: {weather.temperatureMax}°C</p>
