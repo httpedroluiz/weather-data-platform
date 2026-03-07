@@ -2,7 +2,7 @@ import time
 from weather_client import fetch_weather
 from producer import send_to_queue
 
-INTERVAL = 60 * 60  # 1 hora
+INTERVAL = 60
 
 def run():
     while True:
