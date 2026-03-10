@@ -11,7 +11,7 @@ def run():
             send_to_queue(weather)
             print("Weather sent:", weather)
         except Exception as e:
-            print("Error:", e)
+            print("Error:", type(e).__name__, str(e) or repr(e))
 
         time.sleep(INTERVAL)
 
