@@ -17,6 +17,18 @@ import {
   trendVariant,
   classificationVariant,
 } from "@/utils/badgeVariants";
+import {
+  Thermometer,
+  Droplets,
+  Wind,
+  Cloud,
+  MapPin,
+  CalendarClock,
+  Navigation,
+  CloudSun,
+  Ruler,
+  Info,
+} from "lucide-react";
 
 export function Dashboard() {
   const [weather, setWeather] = useState<Weather | null>(null);
@@ -68,6 +80,30 @@ export function Dashboard() {
   );
   }
 
+  const formatTemp = (value: number | null | undefined) =>
+    typeof value === "number" ? `${value}°C` : "—";
+
+  const formatPercent = (value: number | null | undefined) =>
+    typeof value === "number" ? `${value}%` : "—";
+
+  const formatKmh = (value: number | null | undefined) =>
+    typeof value === "number" ? `${value} km/h` : "—";
+
+  const formatCoord = (value: string | number | null | undefined) => {
+    const n =
+      typeof value === "number"
+        ? value
+        : typeof value === "string"
+          ? Number.parseFloat(value)
+          : NaN;
+    return Number.isFinite(n) ? n.toFixed(5) : "—";
+  };
+
+  const minMaxText =
+    weather && typeof weather.temperatureMin === "number" && typeof weather.temperatureMax === "number"
+      ? `${weather.temperatureMin}°/${weather.temperatureMax}°`
+      : "—";
+
   return (
     <div>
       <Navbar />
@@ -107,48 +143,105 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          <InfoCard title="Clima Atual">
-            {weather ? (
-              <div className="space-y-2 text-sm">
-                <p>
-                  Temperatura: <strong>{weather.temperature}°C</strong>
-                </p>
+        <div className="space-y-6">
+          {weather ? (
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <InfoCard
+                title="Temperatura"
+                icon={<Thermometer className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {formatTemp(weather.temperature)}
+                </div>
+              </InfoCard>
 
-                <p>
-                  Vento: {weather.windspeed} km/h
-                </p>
+              <InfoCard
+                title="Humidade"
+                icon={<Droplets className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {formatPercent(weather.humidity)}
+                </div>
+              </InfoCard>
 
-                <p>
-                  Condição:{" "}
-                  <Badge variant="secondary">
+              <InfoCard
+                title="Vento"
+                icon={<Wind className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {formatKmh(weather.windspeed)}
+                </div>
+              </InfoCard>
+
+              <InfoCard
+                title="Nuvens"
+                icon={<Cloud className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {formatPercent(weather.cloudCover)}
+                </div>
+              </InfoCard>
+
+              <InfoCard
+                title="Min/Max"
+                icon={<Ruler className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {minMaxText}
+                </div>
+              </InfoCard>
+
+              <InfoCard
+                title="Condição"
+                icon={<CloudSun className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  
                     {weatherCodeToText(weather.weatherCode)}
-                  </Badge>
-                </p>
+                  
+                </div>
+              </InfoCard>
 
-                <p>Cidade: {weather.city || "Curitiba"}</p>
-                <p>Umidade: {weather.humidity}%</p>
-                <p>Nuvens: {weather.cloudCover}%</p>
-                <p>Máx: {weather.temperatureMax}°C</p>
-                <p>Mín: {weather.temperatureMin}°C</p>
+              <InfoCard
+                title="Localização"
+                icon={<MapPin className="h-5 w-5" />}
+              >
+                <div className="text-xl font-semibold">
+                  {weather.city || "Curitiba"}
+                </div>
+              </InfoCard>
 
-                <p>Latitude: {weather.latitude}</p>
-                <p>Longitude: {weather.longitude}</p>
-
-                <p className="text-muted-foreground">
-                  Registrado em {formatDate(weather.createdAt)}
-                </p>
-              </div> 
-            ) : weatherError ? (
+              <InfoCard
+                title="Detalhes"
+                icon={<Info className="h-5 w-5" />}
+              >
+                <div className="space-y-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Navigation className="h-4 w-4" />
+                    <span className="tabular-nums">
+                      {formatCoord(weather.latitude)}, {formatCoord(weather.longitude)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CalendarClock className="h-4 w-4" />
+                    <span>{formatDate(weather.createdAt)}</span>
+                  </div>
+                </div>
+              </InfoCard>
+            </div>
+          ) : weatherError ? (
+            <InfoCard title="Weather" icon={<CloudSun className="h-5 w-5" />}>
               <p className="text-sm text-destructive">
                 Erro ao carregar dados climáticos.
-              </p> 
-            ) : (
+              </p>
+            </InfoCard>
+          ) : (
+            <InfoCard title="Weather" icon={<CloudSun className="h-5 w-5" />}>
               <p className="text-sm text-muted-foreground">
                 Nenhum dado climático disponível.
               </p>
-            )}
-          </InfoCard>
+            </InfoCard>
+          )}
 
           <InfoCard title="Insights">
             {insights ? (
